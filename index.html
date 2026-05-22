@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Learning Dashboard - Hoppscotch Alternative</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 120px;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: scale(1.02);
+        }
+
+        .btn-success {
+            background: #48bb78;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #38a169;
+        }
+
+        .btn-warning {
+            background: #ed8936;
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #dd6b20;
+        }
+
+        .btn-danger {
+            background: #f56565;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #e53e3e;
+        }
+
+        .btn-secondary {
+            background: #a0aec0;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #718096;
+        }
+
+        .response-section {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f7fafc;
+            border-radius: 6px;
+            border-left: 4px solid #667eea;
+        }
+
+        .response-title {
+            color: #667eea;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .response-content {
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            max-height: 300px;
+            overflow-y: auto;
+            color: #333;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.85em;
+            margin-right: 10px;
+        }
+
+        .status-200, .status-201 {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+
+        .status-400, .status-404 {
+            background: #fed7d7;
+            color: #742a2a;
+        }
+
+        .status-500 {
+            background: #fed7d7;
+            color: #742a2a;
+        }
+
+        .products-list {
+            margin-top: 20px;
+        }
+
+        .product-item {
+            background: #f7fafc;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 12px;
+            border-left: 4px solid #667eea;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .product-info {
+            flex: 1;
+        }
+
+        .product-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .product-details {
+            color: #718096;
+            font-size: 0.9em;
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .product-actions button {
+            min-width: auto;
+            padding: 8px 12px;
+            font-size: 0.9em;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .request-section {
+            background: #edf2f7;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            border-left: 3px solid #667eea;
+        }
+
+        .request-label {
+            color: #667eea;
+            font-weight: 600;
+            font-size: 0.9em;
+            margin-bottom: 6px;
+        }
+
+        .request-value {
+            background: white;
+            padding: 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+            color: #333;
+            word-break: break-all;
+        }
+
+        .loading {
+            color: #667eea;
+            font-style: italic;
+        }
+
+        .error {
+            color: #f56565;
+        }
+
+        .success {
+            color: #48bb78;
+        }
+
+        .time-info {
+            font-size: 0.85em;
+            color: #a0aec0;
+            margin-top: 10px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75em;
+            font-weight: 600;
+            margin-right: 5px;
+        }
+
+        .badge-get {
+            background: #bee3f8;
+            color: #2c5282;
+        }
+
+        .badge-post {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+
+        .badge-put {
+            background: #feebc8;
+            color: #7c2d12;
+        }
+
+        .badge-delete {
+            background: #fed7d7;
+            color: #742a2a;
+        }
+
+        @media (max-width: 1024px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            header h1 {
+                font-size: 1.8em;
+            }
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .tab-button {
+            padding: 10px 20px;
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            color: #718096;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: auto;
+        }
+
+        .tab-button.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #f3f4f6;
+            border-top: 2px solid #667eea;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📊 API Learning Dashboard</h1>
+            <p>Interactive REST API Testing Platform</p>
+            <p style="font-size: 0.95em; margin-top: 10px;">Learn HTTP methods by seeing live requests and responses</p>
+        </header>
+
+        <div class="main-grid">
+            <!-- LEFT SIDE: ACTIONS -->
+            <div class="card">
+                <h2>🎯 Actions</h2>
+
+                <div class="tabs">
+                    <button class="tab-button active" onclick="switchTab(event, 'tab-get')">GET</button>
+                    <button class="tab-button" onclick="switchTab(event, 'tab-post')">POST</button>
+                    <button class="tab-button" onclick="switchTab(event, 'tab-put')">PUT</button>
+                    <button class="tab-button" onclick="switchTab(event, 'tab-delete')">DELETE</button>
+                </div>
+
+                <!-- GET TAB -->
+                <div id="tab-get" class="tab-content active">
+                    <h3 style="color: #2c5282; margin-bottom: 15px;">Get Products</h3>
+                    <div class="form-group">
+                        <label>Product ID (leave empty for all)</label>
+                        <input type="number" id="getProductId" placeholder="e.g., 1">
+                    </div>
+                    <div class="button-group">
+                        <button class="btn-primary" onclick="getProducts()">📥 Get All</button>
+                        <button class="btn-primary" onclick="getProductById()">🔍 Get By ID</button>
+                    </div>
+                </div>
+
+                <!-- POST TAB -->
+                <div id="tab-post" class="tab-content">
+                    <h3 style="color: #22543d; margin-bottom: 15px;">Create New Product</h3>
+                    <div class="form-group">
+                        <label>Product Name</label>
+                        <input type="text" id="postName" placeholder="e.g., Monitor">
+                    </div>
+                    <div class="form-group">
+                        <label>Price</label>
+                        <input type="number" id="postPrice" placeholder="e.g., 299" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label>Category</label>
+                        <input type="text" id="postCategory" placeholder="e.g., Electronics">
+                    </div>
+                    <div class="button-group">
+                        <button class="btn-success" onclick="createProduct()">➕ Create</button>
+                        <button class="btn-secondary" onclick="clearPostForm()">🗑️ Clear</button>
+                    </div>
+                </div>
+
+                <!-- PUT TAB -->
+                <div id="tab-put" class="tab-content">
+                    <h3 style="color: #7c2d12; margin-bottom: 15px;">Update Product</h3>
+                    <div class="form-group">
+                        <label>Product ID</label>
+                        <input type="number" id="putId" placeholder="e.g., 1">
+                    </div>
+                    <div class="form-group">
+                        <label>New Name (optional)</label>
+                        <input type="text" id="putName" placeholder="e.g., Gaming Laptop">
+                    </div>
+                    <div class="form-group">
+                        <label>New Price (optional)</label>
+                        <input type="number" id="putPrice" placeholder="e.g., 1299" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label>New Category (optional)</label>
+                        <input type="text" id="putCategory" placeholder="e.g., Gaming">
+                    </div>
+                    <div class="button-group">
+                        <button class="btn-warning" onclick="updateProduct()">✏️ Update</button>
+                        <button class="btn-secondary" onclick="clearPutForm()">🗑️ Clear</button>
+                    </div>
+                </div>
+
+                <!-- DELETE TAB -->
+                <div id="tab-delete" class="tab-content">
+                    <h3 style="color: #742a2a; margin-bottom: 15px;">Delete Product</h3>
+                    <div class="form-group">
+                        <label>Product ID</label>
+                        <input type="number" id="deleteId" placeholder="e.g., 1">
+                    </div>
+                    <div style="background: #fed7d7; padding: 12px; border-radius: 6px; margin-bottom: 15px;">
+                        <p style="color: #742a2a; font-size: 0.9em;">⚠️ This action cannot be undone</p>
+                    </div>
+                    <div class="button-group">
+                        <button class="btn-danger" onclick="deleteProduct()">🗑️ Delete</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT SIDE: RESPONSE -->
+            <div class="card">
+                <h2>📨 Response</h2>
+
+                <div id="requestDetails" class="request-section">
+                    <div class="request-label">Request</div>
+                    <div class="request-value" id="requestDisplay">No request made yet...</div>
+                </div>
+
+                <div class="response-section">
+                    <div class="response-title">Response Data</div>
+                    <div class="response-content" id="responseDisplay">Waiting for request...</div>
+                </div>
+
+                <div class="time-info">
+                    <span id="statusDisplay"></span>
+                    <span id="timeDisplay"></span>
+                </div>
+            </div>
+
+            <!-- BOTTOM: PRODUCTS LIST -->
+            <div class="card full-width">
+                <h2>📦 All Products (Live View)</h2>
+                <button class="btn-primary" onclick="loadAllProducts()" style="margin-bottom: 20px;">🔄 Refresh</button>
+                <div id="productsList" class="products-list">
+                    <p class="loading">Loading products...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:3000/api';
+
+        // ==================== UTILITY FUNCTIONS ====================
+
+        function switchTab(event, tabId) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Remove active class from all buttons
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Show selected tab and mark button as active
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function displayResponse(method, url, status, responseData, startTime) {
+            const endTime = performance.now();
+            const duration = (endTime - startTime).toFixed(2);
+
+            // Display request
+            const requestDisplay = `${method} ${url}`;
+            document.getElementById('requestDisplay').textContent = requestDisplay;
+
+            // Display response
+            const responseDisplay = JSON.stringify(responseData, null, 2);
+            document.getElementById('responseDisplay').textContent = responseDisplay;
+
+            // Display status
+            const statusClass = status >= 200 && status < 300 ? `status-${status}` : 'status-400';
+            const statusBadge = `<span class="status-badge ${statusClass}">${status}</span>`;
+            document.getElementById('statusDisplay').innerHTML = statusBadge;
+
+            // Display time
+            document.getElementById('timeDisplay').textContent = `${duration}ms`;
+        }
+
+        function showError(error) {
+            document.getElementById('requestDisplay').textContent = 'Error occurred';
+            document.getElementById('responseDisplay').textContent = `❌ Error: ${error}`;
+            document.getElementById('statusDisplay').innerHTML = '<span class="status-badge" style="background: #fed7d7; color: #742a2a;">ERROR</span>';
+        }
+
+        // ==================== GET REQUESTS ====================
+
+        async function getProducts() {
+            const startTime = performance.now();
+            try {
+                const response = await fetch(`${API_URL}/products`);
+                const data = await response.json();
+                displayResponse('GET', `${API_URL}/products`, response.status, data, startTime);
+                loadAllProducts(); // Refresh the list
+            } catch (error) {
+                showError(error.message);
+            }
+        }
+
+        async function getProductById() {
+            const id = document.getElementById('getProductId').value;
+            if (!id) {
+                alert('Please enter a Product ID');
+                return;
+            }
+
+            const startTime = performance.now();
+            try {
+                const response = await fetch(`${API_URL}/products/${id}`);
+                const data = await response.json();
+                displayResponse('GET', `${API_URL}/products/${id}`, response.status, data, startTime);
+            } catch (error) {
+                showError(error.message);
+            }
+        }
+
+        async function loadAllProducts() {
+            try {
+                const response = await fetch(`${API_URL}/products`);
+                const data = await response.json();
+
+                if (!data.data || data.data.length === 0) {
+                    document.getElementById('productsList').innerHTML = '<p style="color: #718096;">No products found</p>';
+                    return;
+                }
+
+                let html = '';
+                data.data.forEach(product => {
+                    html += `
+                        <div class="product-item">
+                            <div class="product-info">
+                                <div class="product-name">#${product.id} - ${product.name}</div>
+                                <div class="product-details">
+                                    💰 $${product.price} | 📂 ${product.category}
+                                </div>
+                            </div>
+                            <div class="product-actions">
+                                <button class="btn-primary" onclick="loadProductById(${product.id})">View</button>
+                                <button class="btn-warning" onclick="populateUpdateForm(${product.id}, '${product.name}', ${product.price}, '${product.category}')">Edit</button>
+                                <button class="btn-danger" onclick="populateDeleteForm(${product.id})">Delete</button>
+                            </div>
+                        </div>
+                    `;
+                });
+                document.getElementById('productsList').innerHTML = html;
+            } catch (error) {
+                document.getElementById('productsList').innerHTML = `<p class="error">Error loading products: ${error.message}</p>`;
+            }
+        }
+
+        function loadProductById(id) {
+            document.getElementById('getProductId').value = id;
+            document.querySelector('[onclick="switchTab(event, \'tab-get\')"]').click();
+            getProductById();
+        }
+
+        function populateUpdateForm(id, name, price, category) {
+            document.getElementById('putId').value = id;
+            document.getElementById('putName').value = name;
+            document.getElementById('putPrice').value = price;
+            document.getElementById('putCategory').value = category;
+            document.querySelectorAll('.tab-button')[2].click();
+        }
+
+        function populateDeleteForm(id) {
+            document.getElementById('deleteId').value = id;
+            document.querySelectorAll('.tab-button')[3].click();
+        }
+
+        // ==================== POST REQUEST ====================
+
+        async function createProduct() {
+            const name = document.getElementById('postName').value;
+            const price = document.getElementById('postPrice').value;
+            const category = document.getElementById('postCategory').value;
+
+            if (!name || !price || !category) {
+                alert('Please fill in all fields');
+                return;
+            }
+
+            const startTime = performance.now();
+            try {
+                const response = await fetch(`${API_URL}/products`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: name,
+                        price: parseFloat(price),
+                        category: category
+                    })
+                });
+                const data = await response.json();
+                displayResponse('POST', `${API_URL}/products`, response.status, data, startTime);
+                clearPostForm();
+                loadAllProducts();
+            } catch (error) {
+                showError(error.message);
+            }
+        }
+
+        function clearPostForm() {
+            document.getElementById('postName').value = '';
+            document.getElementById('postPrice').value = '';
+            document.getElementById('postCategory').value = '';
+        }
+
+        // ==================== PUT REQUEST ====================
+
+        async function updateProduct() {
+            const id = document.getElementById('putId').value;
+            if (!id) {
+                alert('Please enter a Product ID');
+                return;
+            }
+
+            const name = document.getElementById('putName').value;
+            const price = document.getElementById('putPrice').value;
+            const category = document.getElementById('putCategory').value;
+
+            if (!name && !price && !category) {
+                alert('Please fill in at least one field to update');
+                return;
+            }
+
+            const bodyData = {};
+            if (name) bodyData.name = name;
+            if (price) bodyData.price = parseFloat(price);
+            if (category) bodyData.category = category;
+
+            const startTime = performance.now();
+            try {
+                const response = await fetch(`${API_URL}/products/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(bodyData)
+                });
+                const data = await response.json();
+                displayResponse('PUT', `${API_URL}/products/${id}`, response.status, data, startTime);
+                clearPutForm();
+                loadAllProducts();
+            } catch (error) {
+                showError(error.message);
+            }
+        }
+
+        function clearPutForm() {
+            document.getElementById('putId').value = '';
+            document.getElementById('putName').value = '';
+            document.getElementById('putPrice').value = '';
+            document.getElementById('putCategory').value = '';
+        }
+
+        // ==================== DELETE REQUEST ====================
+
+        async function deleteProduct() {
+            const id = document.getElementById('deleteId').value;
+            if (!id) {
+                alert('Please enter a Product ID');
+                return;
+            }
+
+            if (!confirm(`Are you sure you want to delete product #${id}? This cannot be undone.`)) {
+                return;
+            }
+
+            const startTime = performance.now();
+            try {
+                const response = await fetch(`${API_URL}/products/${id}`, {
+                    method: 'DELETE'
+                });
+                const data = await response.json();
+                displayResponse('DELETE', `${API_URL}/products/${id}`, response.status, data, startTime);
+                document.getElementById('deleteId').value = '';
+                loadAllProducts();
+            } catch (error) {
+                showError(error.message);
+            }
+        }
+
+        // Load products on page load
+        window.addEventListener('load', () => {
+            loadAllProducts();
+        });
+    </script>
+</body>
+</html>
